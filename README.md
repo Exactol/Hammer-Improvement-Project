@@ -1,5 +1,5 @@
 # Hammer-Improvement-Project
-A project dedicated to improving the Source Engine level editor, Hammer, through DLL injection
+A project dedicated to improving the Valve Hammer Editor through DLL injection
 
 # Planned features: 
 
