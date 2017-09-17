@@ -35,9 +35,11 @@ public:
 	LPWSTR menuName;
 	HMENU hHIPMenu;
 
+	HMENU hParentMenu;
+	bool initialized = false;
 	HIPMenu()
 	{
-
+		
 	}
 	HIPMenu(LPWSTR _menuName)
 	{
@@ -74,10 +76,10 @@ public:
 	void Create(const HMENU &hMenu)
 	{
 		hHIPMenu = CreateMenu();
-
+		initialized = true;
 		//Create popup menu
 		AppendMenu(hMenu, MF_STRING | MF_POPUP, (unsigned int)hHIPMenu, menuName);
-
+		
 		//If submenu is not empty, add HIPSubMenu submenus to popup menu
 		if (!subMenus.empty())
 		{
@@ -85,18 +87,50 @@ public:
 			{
 				//For each menu item, append it to the popup menu
 				MenuItem.Append(hHIPMenu);
-			}			
+			}		
+
+			//Store handle for parent menu
+			hParentMenu = hMenu;
 		}
 
 	}
 
 	void Remove(const HWND &hWnd)
 	{
-		CMenu *cSyncMenu = CMenu::FromHandle(GetMenu(hWnd));
-		if (cSyncMenu != NULL)
+		CMenu *cHIPMenu = CMenu::FromHandle(GetMenu(hWnd));
+		if (cHIPMenu != nullptr)
 		{
-			//Case hSyncMenu as UINT to get position
-			cSyncMenu->RemoveMenu((UINT)hHIPMenu, MF_BYCOMMAND);
+			//Cast hHIPMenu as UINT to get position
+			cHIPMenu->RemoveMenu((UINT)hHIPMenu, MF_BYCOMMAND);
 		}
+	}
+
+	void Remove(const HMENU &hMenu)
+	{
+		CMenu *cHIPMenu = CMenu::FromHandle(hMenu);
+		if (cHIPMenu != nullptr)
+		{
+			//Cast hHIPMenu as UINT to get position
+			cHIPMenu->RemoveMenu((UINT)hHIPMenu, MF_BYCOMMAND);
+		}
+	}
+
+	~HIPMenu()
+	{
+		if (initialized == true)
+		{
+			//Remove from menubar before deleting
+			
+			if(hParentMenu != NULL)
+			{
+				Remove(hParentMenu);	
+				CloseHandle(hParentMenu);
+			}
+			
+			CloseHandle(hHIPMenu);
+			delete menuName;
+			subMenus.clear();
+		}
+
 	}
 };

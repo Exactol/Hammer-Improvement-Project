@@ -1,7 +1,7 @@
 #pragma once
 #include "../stdafx.h"
 
-class SettingDlg : CDialog
+class SettingDlg : public CDialog
 {
 public:
 	enum { IDD = IDD_SEND_MESSAGE};
