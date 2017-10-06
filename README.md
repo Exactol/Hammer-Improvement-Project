@@ -13,7 +13,3 @@ A project dedicated to improving the Valve Hammer Editor through DLL injection
 
 # Completed features: 
 -Integrated Compile Pal support
-
-# Setup and Compiling
-
-Make sure to set "HIPInjector" to the startup project
