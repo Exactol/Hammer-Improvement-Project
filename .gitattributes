@@ -62,5 +62,5 @@
 #*.rtf   diff=astextplain
 #*.RTF   diff=astextplain
 
-*.cpp diff=astextplain
-*.h diff=astextplain
+*.cpp diff merge text
+*.h diff merge text
