@@ -62,5 +62,5 @@
 #*.rtf   diff=astextplain
 #*.RTF   diff=astextplain
 
-*.cpp diff=localizablestrings
-*.h diff=localizablestrings
+*.cpp diff
+*.h diff
