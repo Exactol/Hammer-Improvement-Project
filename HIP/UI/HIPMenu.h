@@ -117,20 +117,21 @@ public:
 
 	~HIPMenu()
 	{
-		if (initialized == true)
-		{
-			//Remove from menubar before deleting
-			
-			if(hParentMenu != NULL)
-			{
-				Remove(hParentMenu);	
-				CloseHandle(hParentMenu);
-			}
-			
-			CloseHandle(hHIPMenu);
-			delete menuName;
-			subMenus.clear();
-		}
+		//TODO fix assertion error deconstructor causes
+		//if (initialized == true)
+		//{
+		//	//Remove from menubar before deleting
+		//	
+		//	if(hParentMenu != NULL)
+		//	{
+		//		Remove(hParentMenu);	
+		//		CloseHandle(hParentMenu);
+		//	}
+		//	
+		//	CloseHandle(hHIPMenu);
+		//	delete menuName;
+		//	subMenus.clear();
+		//}
 
 	}
 };
