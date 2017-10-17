@@ -8,12 +8,17 @@
 #include <filesystem>
 #include <atlbase.h>
 #include <minwinbase.h>
-
+#include <fstream> 
+#include<iostream>
 using std::string;
 
 const string targetProcess = "hammer.exe";
 const string targetInjectedDll = "HIP.dll";
-const string gameinfoPath = "C:/Program Files (x86)/Steam/SteamApps/common/Team Fortress 2/tf";
+const string DoubleBackSlash = "\\";
+
+
+
+
 
 LPTHREAD_START_ROUTINE AllocWriteDLL(HANDLE hTargetProcHandle, LPCSTR dllPath, LPVOID *lpExecParam)
 {
@@ -81,7 +86,8 @@ HANDLE AttachToProcess(DWORD procID)
 	if (SetDebugPrivileges() == 0)
 	{
 		printf("Success\n");
-	} else
+	}
+	else
 	{
 		printf("Failed");
 		return(NULL);
@@ -95,7 +101,7 @@ HANDLE AttachToProcess(DWORD procID)
 }
 
 //Source: https://stackoverflow.com/a/15440094
-DWORD StartHammer()
+DWORD StartHammer(LPCSTR appPath)
 {
 	//Additional info
 	STARTUPINFO si;
@@ -105,22 +111,21 @@ DWORD StartHammer()
 	ZeroMemory(&si, sizeof(si));
 	si.cb = sizeof(si);
 	ZeroMemory(&pi, sizeof(pi));
-
-	//TODO not hardcoded path
-	LPCSTR appPath = "C:/Program Files (x86)/Steam/steamapps/common/Team Fortress 2/bin/hammer.exe";
-
+	printf("Hammer path is: ");
+	printf(appPath);
+	printf("\n");
 	//Start program
 	if (CreateProcess(appPath,  // the path
-			NULL,				// Command line
-			NULL,				// Process handle not inheritable
-			NULL,				// Thread handle not inheritable
-			FALSE,				// Set handle inheritance to FALSE
-			0,					// No creation flags
-			NULL,				// Use parent's environment block
-			NULL,				// Use parent's starting directory 
-			&si,				// Pointer to STARTUPINFO structure
-			&pi					// Pointer to PROCESS_INFORMATION structure (removed extra parentheses)
-		) == NULL)
+		NULL,				// Command line
+		NULL,				// Process handle not inheritable
+		NULL,				// Thread handle not inheritable
+		FALSE,				// Set handle inheritance to FALSE
+		0,					// No creation flags
+		NULL,				// Use parent's environment block
+		NULL,				// Use parent's starting directory 
+		&si,				// Pointer to STARTUPINFO structure
+		&pi					// Pointer to PROCESS_INFORMATION structure (removed extra parentheses)
+	) == NULL)
 	{
 		printf("[!] Could not start hammer!\n");
 		return false;
@@ -128,9 +133,8 @@ DWORD StartHammer()
 
 	DWORD pid = pi.dwProcessId;
 
-	//TODO try and find if the splashscreen exists, then inject once it doesnt
 	//Loop until the main window is created, otherwise injection fails
-	while(FindWindow("VALVEWORLDCRAFT", NULL) == NULL)
+	while (FindWindow("VALVEWORLDCRAFT", NULL) == NULL)
 	{
 		//Try every 1 second
 		Sleep(1000);
@@ -141,8 +145,57 @@ DWORD StartHammer()
 
 	CloseHandle(pi.hThread);
 	CloseHandle(pi.hProcess);
-	
+
 	return pid;
+}
+
+std::string GetHammerFilepath()
+{
+	const char* ReturnPath = new char();
+	//First we see if the file "Hammerpath.txt" is setup including the filepath and attempt to read from it
+	const char HammerPathHolder[15] = "HammerPath.txt";
+	std::ifstream infile(HammerPathHolder);
+
+	if (infile.good())
+	{
+		string sLine;
+		getline(infile, sLine);
+		infile.close();
+		ReturnPath = sLine.c_str();
+		return sLine.c_str();
+	}
+	else
+	{
+		infile.close();
+		printf("Couldn't find the default file at: ");
+		printf(HammerPathHolder);
+		printf(" Checking for environment variable \n");
+		//If that failed, we will look into the default directory using environment variables for hammer.exe
+		char *GameDirectoryPath;
+		size_t len = 0;
+		errno_t ErrorGettingEnvironmentVariable = _dupenv_s(&GameDirectoryPath, &len, "sourcesdk");
+
+		if ((ErrorGettingEnvironmentVariable == 0) && (GameDirectoryPath != nullptr))
+		{
+			const std::string HammerPath = *&GameDirectoryPath + DoubleBackSlash + targetProcess;
+			return HammerPath.c_str();
+		}
+		else
+		{
+			//If that failed, we will then create the TXT file, and notify the user to edit it
+			printf("Making a file at:");
+			printf(HammerPathHolder);
+			printf("This file will contain the path to the hammer executable, please edit it to be correct \n");
+
+			const char* DefaultPath = "C:/Program Files (x86)/Steam/SteamApps/common/Team Fortress 2/bin/hammer.exe";
+
+			std::ofstream myfile;
+			myfile.open(HammerPathHolder);
+			myfile << DefaultPath;
+			myfile.close();
+			return DefaultPath;
+		}
+	}
 }
 
 //CREDIT: http://www.cplusplus.com/forum/windows/12137/
@@ -157,14 +210,14 @@ DWORD FindProcessID(const string& procName)
 		printf("[!] Error: could not create process snapshot!\n");
 		return 0;
 	}
-	
+
 	Process32First(processSnapshot, &processInfo);
 	if (!procName.compare(processInfo.szExeFile))
 	{
 		CloseHandle(processSnapshot);
 		return(processInfo.th32ProcessID);
 	}
-	
+
 	while (Process32Next(processSnapshot, &processInfo))
 	{
 		if (!procName.compare(processInfo.szExeFile))
@@ -178,7 +231,9 @@ DWORD FindProcessID(const string& procName)
 	printf("[+] Attempting to start target process\n");
 
 	//Attempt to start hammer if process doesnt exist
-	DWORD pid = StartHammer();
+	std::string HammerFilePath = GetHammerFilepath();
+	printf("Was successful in setting the filepath! Starting hammer \n");
+	DWORD pid = StartHammer(HammerFilePath.c_str());
 
 	if (pid != NULL)
 	{
@@ -194,7 +249,7 @@ int main()
 	LPVOID lpExecParam;
 	HANDLE hTargetProcHandle = NULL;
 	TCHAR dllPath[MAX_PATH] = TEXT("");
-	
+
 	//Find the process and get it's ID
 	int procId = FindProcessID(targetProcess);
 	if (procId == 0)
@@ -211,12 +266,12 @@ int main()
 
 	//Convert to string, remove exe filename and add dll filename
 	string fullPath(dllPath);
-	fullPath.erase(fullPath.end()-15, fullPath.end());
+	fullPath.erase(fullPath.end() - 15, fullPath.end());
 	fullPath.append(targetInjectedDll);
-	
+
 	//Convert string back into tchar[]
 	_tcscpy_s(dllPath, CA2A(fullPath.c_str()));
-	
+
 	printf("[+] Full DLL filepath: %s \n", dllPath);
 
 	//Get process handle
@@ -227,7 +282,7 @@ int main()
 		system("pause");
 		return -1;
 	}
-	
+
 	//Get the address for the start of dll
 	lpStartExecAddr = AllocWriteDLL(hTargetProcHandle, dllPath, &lpExecParam);
 	if (lpStartExecAddr == NULL)
@@ -257,4 +312,3 @@ int main()
 	//system("pause");
 	return 0;
 }
-
