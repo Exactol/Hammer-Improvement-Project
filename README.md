@@ -2,14 +2,19 @@
 A project dedicated to improving the Valve Hammer Editor through DLL injection
 
 # Planned features: 
+-New startup screen
 
--Plugin system
+-Rotateable grid (Not sure if possible)
+
+-Built in tutorial
 
 -Map templates
 
 -Crash logging to track down the sources of Hammer's numerous crashes
 
 -Debugging tools
+
+-Plugin system (Probably not)
 
 # Completed features: 
 -Integrated Compile Pal support
