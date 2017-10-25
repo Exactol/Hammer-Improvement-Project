@@ -1,3 +1,5 @@
+Expirimental branch to see if Hammer can be hosted in WPF
+
 # Hammer-Improvement-Project
 A project dedicated to improving the Valve Hammer Editor through DLL injection
 
