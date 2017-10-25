@@ -10,6 +10,8 @@ A project dedicated to improving the Valve Hammer Editor through DLL injection
 
 -Map templates
 
+-Undo history
+
 -Crash logging to track down the sources of Hammer's numerous crashes
 
 -Debugging tools
