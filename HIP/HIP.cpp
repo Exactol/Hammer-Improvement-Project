@@ -376,7 +376,7 @@ namespace HIP
 		CMDIFrameWnd *hammerMainFrm = (CMDIFrameWnd*)CWnd::FromHandle(hHammerWnd);
 		//CFrameWnd *hammerFrm = (CFrameWnd*)CWnd::FromHandle(hHammerWnd);
 
-		//hammer->SetWindowText(L"HIP Hammer");
+		hammer->SetWindowText(L"HIP Hammer");
 
 		//TODO investigate to improve toolbar functions
 		//https://stackoverflow.com/questions/19877293/how-to-get-a-pointer-to-color-button
@@ -398,7 +398,6 @@ namespace HIP
 		hMenuHammer = GetMenu(hHammerWnd);
 
 		CreateMenus();
-
 
 		return TRUE;
 	}

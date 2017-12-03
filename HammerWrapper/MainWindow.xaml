@@ -1,0 +1,16 @@
+﻿<Window x:Class="HammerWrapper.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HammerWrapper"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525"
+        Background="Brown"
+        Closing="MainWindow_OnClosing"
+        SizeChanged="MainWindow_OnSizeChanged"
+        >
+    
+    <Button VerticalAlignment="Top" Height="20" Click="ButtonBase_OnClick">Click</Button>
+    <!--<local:HammerHost x:Name="host" Background="Aqua" Unloaded="Host_OnUnloaded" Height="240" Width="250"></local:HammerHost>-->
+</Window>

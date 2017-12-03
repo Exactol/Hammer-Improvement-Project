@@ -141,6 +141,7 @@ DWORD StartHammer(LPCSTR appPath)
 	}
 	//Delay injection to try to stop hammer from locking up when injection happens during hammer startup
 	//TODO find better solution, slower computers may take longer to load and lead to injection starting during startup
+	//find way to wait for idle loop?
 	Sleep(3000);
 
 	CloseHandle(pi.hThread);
