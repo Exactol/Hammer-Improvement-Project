@@ -6,6 +6,8 @@ A project dedicated to improving the Valve Hammer Editor through DLL injection
 
 -Rotateable grid (Not sure if possible)
 
+-Export to model (obj, maybe other formats)
+
 -Built in tutorial
 
 -Map templates
