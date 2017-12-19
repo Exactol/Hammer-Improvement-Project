@@ -4,6 +4,8 @@ A project dedicated to improving the Valve Hammer Editor through DLL injection
 # Planned features: 
 -New startup screen
 
+-Realtime mapping
+
 -Rotateable grid (Not sure if possible)
 
 -Export to model (obj, maybe other formats)
