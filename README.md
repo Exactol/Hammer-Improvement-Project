@@ -23,7 +23,8 @@ A project dedicated to improving the Valve Hammer Editor through DLL injection
 -Plugin system (Probably not)
 
 # Completed features: 
--Integrated Compile Pal support
+**-Integrated Compile Pal support**:
+* Open CompilePal with the current game configuration and map without ever leaving Hammer
 
 ![CompilePal button](https://i.imgur.com/Kjlqxs1.png)
 
