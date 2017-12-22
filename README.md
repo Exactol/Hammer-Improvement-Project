@@ -4,6 +4,8 @@ A project dedicated to improving the Valve Hammer Editor through DLL injection
 # Planned features: 
 -New startup screen
 
+-Random texture uv (for hammer versions that dont have it)
+
 -Realtime mapping
 
 -Rotateable grid (Not sure if possible)
