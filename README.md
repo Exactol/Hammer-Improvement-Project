@@ -1,3 +1,10 @@
+# -------------------------------------------------------------------
+# THIS PROJECT HAS BEEN MOVED TO: https://github.com/Exactol/Hammer-Reforged
+# -------------------------------------------------------------------
+
+
+
+
 # Hammer-Improvement-Project
 A project dedicated to improving the Valve Hammer Editor through DLL injection
 
